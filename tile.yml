@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  proxy:
+    image: pastvu/tile
+    networks:
+      - traefik-public
+    deploy:
+      labels:
+        - traefik.enable=true
+        - traefik.docker.network=traefik-public
+        - traefik.constraint-label=traefik-public
+        - traefik.http.routers.tile-https.rule=Host(`tile.pastvu.com`)
+        - traefik.http.routers.tile-https.entrypoints=https
+        - traefik.http.routers.tile-https.tls=true
+        - traefik.http.routers.tile-https.tls.certresolver=le
+        - traefik.http.services.tile.loadbalancer.server.port=80
+networks:
+  traefik-public:
+    external: true
